@@ -112,12 +112,12 @@ $('.mobile_menu ').on('click',function(){
           required:true,
           regex:'[A-Za-z]{1,32}'
         },
-        number:{
+        phoneNumber:{
           required:true,
           digits:true,
           minlength:8,
           maxlength:11,
-          regex:'[0-9]+'
+          regex:'[0-9]+',
           
         },
         email:{
@@ -128,42 +128,42 @@ $('.mobile_menu ').on('click',function(){
       },
       
       messages:{
-        Name:'This field is required',
+        name:'This field is required',
         phoneNumber:'This field is required',
-        Email:'Enter a valid email',
-       
+        email:'Enter a valid email',
       },
+
+      submitHandler: function(form) {
+        $('#preloader-active').fadeIn();
+        let $form=$(form);
+        let formId=$(form).attr('id');
+        switch($formId){
+            case '.form-book':
+                $.ajax({
+                    type:'POST',
+                    url :$form.attr('action'),
+                    data:$form.serialize(),
+                })
+                    .done(function(){
+                        console.log('its ok')
+                    })
+                    .fail(function(){
+                        console.log('fail')
+                    })
+                    .always(function(){
+                        setTimeout(function(){
+                            $form.trigger('resert');
+                            $('#wrapper-modal').fadeOut();
+                        },1100);
+                    })
+            break;
+        };
+    }
     });
     
-  }
+  };
 
   
-  submitHandler: (function(form) {
-    $('#preloader-active').fadeIn();
-    let $form=$(form);
-    let formId=$(form).attr('id');
-    switch($formId){
-      case 'form-book':
-        $.ajax({
-          type:'POST',
-          url :$form.attr('action'),
-          data:$form.serialize(),
-        })
-          .done(function(){
-            console.log('its ok')
-          })
-          .fail(function(){
-            console.log('fail')
-          })
-          .always(function(){
-            setTimeout(function(){
-              $form.trigger('resert');
-              $('#wrapper-modal').fadeOut();
-            },1100);
-          })
-      };
-      break;
-  });
 $('.form-val').each(function(){
   valEll($(this));
 });
